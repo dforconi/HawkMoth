@@ -9,7 +9,9 @@
     android:layout_width="match_parent"
     android:id="@+id/map" tools:context=".MapsActivity"
     android:name="com.google.android.gms.maps.SupportMapFragment"
-    android:gravity="top" />
+    android:gravity="top"
+    android:layout_above="@+id/button2"
+    android:layout_alignParentTop="true" />
 
     <Button
         android:layout_width="137dp"
@@ -17,9 +19,10 @@
         android:text="Settings"
         android:id="@+id/button2"
         android:layout_gravity="right"
-        android:layout_below="@+id/map"
+        android:layout_alignTop="@+id/button"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true" />
 
     <Button
         android:layout_width="match_parent"
@@ -27,10 +30,10 @@
         android:text="START/STOP"
         android:id="@+id/button"
         android:layout_gravity="center_horizontal"
-        android:layout_alignTop="@+id/button2"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/button2"
-        android:layout_toLeftOf="@+id/button2" />
+        android:layout_toLeftOf="@+id/button2"
+        android:layout_toStartOf="@+id/button2" />
 
 </RelativeLayout>

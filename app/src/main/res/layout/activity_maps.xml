@@ -1,8 +1,8 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent"
     android:weightSum="1"
     android:orientation="vertical"
-    >
+    android:id="@+id/">
 
 <fragment
     android:layout_height="441dp"
@@ -12,10 +12,25 @@
     android:gravity="top" />
 
     <Button
+        android:layout_width="137dp"
+        android:layout_height="82dp"
+        android:text="Settings"
+        android:id="@+id/button2"
+        android:layout_gravity="right"
+        android:layout_below="@+id/map"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="86dp"
         android:text="START/STOP"
         android:id="@+id/button"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:layout_alignTop="@+id/button2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/button2"
+        android:layout_toLeftOf="@+id/button2" />
 
-</LinearLayout>
+</RelativeLayout>

@@ -1,5 +1,6 @@
 package com.teamvictory.map;
 
+import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
@@ -17,8 +18,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 public class MapsActivity extends FragmentActivity implements
         GoogleApiClient.ConnectionCallbacks,
@@ -26,7 +32,7 @@ public class MapsActivity extends FragmentActivity implements
         LocationListener {
 
     public static final String TAG = MapsActivity.class.getSimpleName();
-
+    public final static String EXTRA_MESSAGE = "com.teamvictory.map.MESSAGE";
     /*
      * Define a request code to send to Google Play services
      * This code is returned in Activity.onActivityResult
@@ -34,10 +40,11 @@ public class MapsActivity extends FragmentActivity implements
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-
+    private Location mCurrentLocation;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-
+    private Marker mMarker;
+    private boolean mRequestingLocation;
     Button button1;
     Button button2;
 
@@ -57,9 +64,9 @@ public class MapsActivity extends FragmentActivity implements
 
         // Create the LocationRequest object
         mLocationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
-                .setInterval(10 * 1000)        // 10 seconds, in milliseconds
-                .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(5 * 1000)        // 5 seconds, in milliseconds
+                .setFastestInterval(5 * 100); // .5 second, in milliseconds
     }
 
     private void addListenerOnButton() {
@@ -69,14 +76,18 @@ public class MapsActivity extends FragmentActivity implements
         button1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                    // do something when start/stop clicked
+                //for start stop function
+                //place a marker at the starting location
+                    //the next click should be the stop button now
+                    //place a marker at the end location
             }
         });
 
         button2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                    // do something when settings clicked
+                openSettings(v);
+                // do something when settings clicked
             }
 
         });
@@ -147,10 +158,11 @@ public class MapsActivity extends FragmentActivity implements
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
 
         //mMap.addMarker(new MarkerOptions().position(new LatLng(currentLatitude, currentLongitude)).title("Current Location"));
+
         MarkerOptions options = new MarkerOptions()
                 .position(latLng)
                 .title("I am here!");
-        mMap.addMarker(options);
+        mMarker =mMap.addMarker(options);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 
@@ -162,7 +174,9 @@ public class MapsActivity extends FragmentActivity implements
         }
         else {
             handleNewLocation(location);
+            startLocationUpdates();
         }
+
     }
 
     @Override
@@ -201,6 +215,30 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     public void onLocationChanged(Location location) {
-        handleNewLocation(location);
+        mCurrentLocation = location;
+        updatemap(mCurrentLocation);
+        //String mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
     }
+
+    private void updatemap(Location location) {
+        double currentLat = location.getLatitude();
+        double currentLong = location.getLongitude();
+
+        LatLng currLatLng= new LatLng(currentLat,currentLong);
+       // MarkerOptions currOptions = new MarkerOptions()
+         //       .position(currLatLng)
+           //     .title("this is the Location Now!");
+             //   mMap.addMarker(currOptions);
+        mMarker.setPosition(currLatLng);
+    }
+
+    protected void startLocationUpdates(){
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+    }
+
+    public void openSettings(View view) {
+       Intent intent = new Intent(this,SettingsActivity.class);
+        MapsActivity.this.startActivity(intent);
+    }
+
 }

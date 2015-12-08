@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent"
     android:weightSum="1"
     android:orientation="vertical"
-    android:id="@+id/">
+    android:id="@+id/string">
 
 <fragment
     android:layout_height="441dp"
@@ -25,7 +25,8 @@
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/button"
         android:layout_toEndOf="@+id/button"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:onClick="openSettings"/>
 
     <Button
         android:layout_width="200dp"

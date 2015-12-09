@@ -112,7 +112,7 @@ public class MapsActivity extends FragmentActivity implements
             @Override
             public void onClick(View v) {
                // Toast popup to display stats
-                Toast.makeText(getApplicationContext(), "Stats here", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "@string/stats_toast", Toast.LENGTH_LONG).show();
                 // do something when Stats clicked
             }
 

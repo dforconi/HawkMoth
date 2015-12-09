@@ -5,6 +5,11 @@
 
     <!-- Strings related to Settings -->
 
+    <string-array name="stats_toast">
+        <item>Distance: </item>
+        <item>Time: </item>
+    </string-array>
+
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
 

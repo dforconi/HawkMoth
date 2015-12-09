@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -50,7 +51,8 @@ public class MapsActivity extends FragmentActivity implements
     private boolean mRequestingLocation;
     Button button1;
     Button button2;
-   public boolean startState =true;
+    public boolean startState =true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,7 @@ public class MapsActivity extends FragmentActivity implements
                 .setInterval(5 * 1000)        // 5 seconds, in milliseconds
                 .setFastestInterval(5 * 100); // .5 second, in milliseconds
     }
+
 
     private void addListenerOnButton() {
         button1 = (Button) findViewById(R.id.button);
@@ -108,9 +111,9 @@ public class MapsActivity extends FragmentActivity implements
         button2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-               // mMap.clear();
-                openSettings(v);
-                // do something when settings clicked
+               // Toast popup to display stats
+                Toast.makeText(getApplicationContext(), "Stats here", Toast.LENGTH_LONG).show();
+                // do something when Stats clicked
             }
 
         });
@@ -186,7 +189,7 @@ public class MapsActivity extends FragmentActivity implements
         MarkerOptions options = new MarkerOptions()
                 .position(latLng)
                 .title("I am here!");
-        mMarker =mMap.addMarker(options);
+        mMarker = mMap.addMarker(options);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,19));
     }
 

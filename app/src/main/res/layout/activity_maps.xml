@@ -16,7 +16,7 @@
     <Button
         android:layout_width="137dp"
         android:layout_height="wrap_content"
-        android:text="Settings"
+        android:text="STATS"
         android:id="@+id/button2"
         android:layout_gravity="right"
         android:layout_alignTop="@+id/button"

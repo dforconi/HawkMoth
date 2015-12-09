@@ -2,16 +2,17 @@ package com.teamvictory.map;
 
 import android.content.Intent;
 import android.content.IntentSender;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.data.BitmapTeleporter;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -22,7 +23,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import android.view.View.OnClickListener;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 public class MapsActivity extends FragmentActivity implements
         GoogleApiClient.ConnectionCallbacks,
@@ -42,6 +43,7 @@ public class MapsActivity extends FragmentActivity implements
     private Location mCurrentLocation;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
+    private Location mPreviousLocation;
     private Marker mMarker;
     private Marker startMarker;
     private Marker endMarker;
@@ -78,64 +80,35 @@ public class MapsActivity extends FragmentActivity implements
         button1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                MarkerOptions startOptions = new MarkerOptions().position(getCurrentLatLng(mCurrentLocation))
+                        .title("start").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
-                if(startState) {
-                    MarkerOptions startOptions = new MarkerOptions().position(getCurrentLatLng(mCurrentLocation))
-                            .title("start").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                MarkerOptions endOptions = new MarkerOptions().position(getCurrentLatLng(mCurrentLocation))
+                        .title("end").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
-                    //startMarker.remove();
-                    if (startMarker == null) {
+                if(startMarker==null && endMarker==null) {
                         startMarker = mMap.addMarker(startOptions);
-                        startState =false;
-                    } else {
-                        startMarker.remove();
-                        startMarker = mMap.addMarker(startOptions);
-                        startState =false;
                     }
+                else if (startMarker!=null && endMarker==null){
+                    endMarker =mMap.addMarker(endOptions);
                 }
-                else {
-                    MarkerOptions endOptions = new MarkerOptions().position(getCurrentLatLng(mCurrentLocation))
-                            .title("end").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-               if(endMarker==null){
-                   endMarker=mMap.addMarker(endOptions);
-                   startState=true;
-               }else{
-                   endMarker.remove();
-                   endMarker=mMap.addMarker(endOptions);
-                   startState=true;
-               }
-
+                else if (startMarker !=null && endMarker!=null){
+                    endMarker.remove();
+                    startMarker.remove();
+                    startMarker=mMap.addMarker(startOptions);
                 }
-
-
-
-                //if(start_stop){
-                  //  mMap.clear();//clears the actual location marker, do not like this.
-
-                  //  MarkerOptions startOptions = new MarkerOptions().position(getCurrentLatLng(mCurrentLocation))
-                    //        .title("start");
-                    //startMarker=mMap.addMarker(startOptions);
-
-                    //place endmarker
-                    //set false
-
+                else if( startMarker==null && endMarker!=null){
+                    endMarker.remove();
+                    startMarker=mMap.addMarker(startOptions);
                 }
-              //  else{
+            }
 
-                //    start_stop=true;
-                //}
-                //if there is a beginning marker
-                //for start stop function
-                //place a marker at the starting location
-                    //the next click should be the stop button now
-                    //place a marker at the end location
-            //}
         });
 
         button2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMap.clear();
+               // mMap.clear();
                 openSettings(v);
                 // do something when settings clicked
             }
@@ -214,7 +187,7 @@ public class MapsActivity extends FragmentActivity implements
                 .position(latLng)
                 .title("I am here!");
         mMarker =mMap.addMarker(options);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,19));
     }
 
     @Override
@@ -268,6 +241,7 @@ public class MapsActivity extends FragmentActivity implements
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
         updatemap(mCurrentLocation);
+
         //String mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
     }
     private LatLng getCurrentLatLng(Location location){
@@ -286,7 +260,16 @@ public class MapsActivity extends FragmentActivity implements
          //       .position(currLatLng)
            //     .title("this is the Location Now!");
              //   mMap.addMarker(currOptions);
-        mMarker.setPosition(getCurrentLatLng(mCurrentLocation));//test of getCurrentLatLng
+        mMarker.setPosition(getCurrentLatLng(mCurrentLocation));
+        if(startMarker!=null && endMarker == null){
+            PolylineOptions lineOptions = new PolylineOptions()
+                    .add(getCurrentLatLng(mCurrentLocation), getCurrentLatLng(mPreviousLocation))
+                    .width(20).color(Color.CYAN);
+            //make a polyline from mpreviouslocation
+            //to mcurrentlocation
+            mMap.addPolyline(lineOptions);
+        }
+        mPreviousLocation=location;//test of getCurrentLatLng
         //this method works but gives issue for buttonclick, since marker isnt down yet
     }
 

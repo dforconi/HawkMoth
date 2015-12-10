@@ -120,7 +120,7 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        mMap.clear();
+        //mMap.clear();
         setUpMapIfNeeded();
         mGoogleApiClient.connect();
     }
@@ -186,8 +186,12 @@ public class MapsActivity extends FragmentActivity implements
         MarkerOptions options = new MarkerOptions()
                 .position(latLng)
                 .title("I am here!");
-        mMarker =mMap.addMarker(options);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,19));
+        if(mMarker!=null){
+            mMarker.setPosition(latLng);
+        }else {
+            mMarker = mMap.addMarker(options);
+        }
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 19));
     }
 
     @Override
@@ -260,7 +264,9 @@ public class MapsActivity extends FragmentActivity implements
          //       .position(currLatLng)
            //     .title("this is the Location Now!");
              //   mMap.addMarker(currOptions);
-        mMarker.setPosition(getCurrentLatLng(mCurrentLocation));
+
+            mMarker.setPosition(getCurrentLatLng(mCurrentLocation));
+
         if(startMarker!=null && endMarker == null){
             PolylineOptions lineOptions = new PolylineOptions()
                     .add(getCurrentLatLng(mCurrentLocation), getCurrentLatLng(mPreviousLocation))

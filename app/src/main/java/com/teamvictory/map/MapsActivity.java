@@ -52,6 +52,9 @@ public class MapsActivity extends FragmentActivity implements
     Button button1;
     Button button2;
     public boolean startState =true;
+    public double dist;   // will depend on units dist is measured in (meters, miles, feet, etc.)
+    public double time;  // will depend on how time is measured (sec, mins, etc.)
+
 
 
     @Override
@@ -112,7 +115,9 @@ public class MapsActivity extends FragmentActivity implements
             @Override
             public void onClick(View v) {
                // Toast popup to display stats
-                Toast.makeText(getApplicationContext(), "@string/stats_toast", Toast.LENGTH_LONG).show();
+                double dist = 15.0; // dummy value for display purposes
+                double time = 63.0; // dummy value
+                Toast.makeText(getApplicationContext(), "Distance (mi.): " +dist +"\nTime (min.): " +time, Toast.LENGTH_LONG).show();
                 // do something when Stats clicked
             }
 

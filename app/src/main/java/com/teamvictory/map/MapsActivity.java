@@ -63,6 +63,7 @@ public class MapsActivity extends FragmentActivity implements
     private boolean running;  // used for timer
     private long secs,mins,hrs;
     private String hours,minutes,seconds;
+    double prevLat, prevLon, curLat, curLong;
 
 
     @Override
@@ -107,6 +108,8 @@ public class MapsActivity extends FragmentActivity implements
 
                 if(startMarker==null && endMarker==null) {
                         startMarker = mMap.addMarker(startOptions);
+                        curLat = mCurrentLocation.getLatitude();
+                        curLong = mCurrentLocation.getLongitude();
                         totalDist = 0.0;
                     }
                 else if (startMarker!=null && endMarker==null){
@@ -116,11 +119,15 @@ public class MapsActivity extends FragmentActivity implements
                     endMarker.remove();
                     startMarker.remove();
                     startMarker=mMap.addMarker(startOptions);
+                    curLat = mCurrentLocation.getLatitude();
+                    curLong = mCurrentLocation.getLongitude();
                     totalDist = 0.0;
                 }
                 else if( startMarker==null && endMarker!=null){
                     endMarker.remove();
                     startMarker=mMap.addMarker(startOptions);
+                    curLat = mCurrentLocation.getLatitude();
+                    curLong = mCurrentLocation.getLongitude();
                     totalDist = 0.0;
                 }
             }
@@ -319,9 +326,12 @@ public class MapsActivity extends FragmentActivity implements
 
         return new LatLng(lat,lon);
     }
+
     private void updatemap(Location location) {
         double currentLat = location.getLatitude();
         double currentLong = location.getLongitude();
+
+
 
         LatLng currLatLng= new LatLng(currentLat,currentLong);
        // MarkerOptions currOptions = new MarkerOptions()
@@ -329,14 +339,21 @@ public class MapsActivity extends FragmentActivity implements
            //     .title("this is the Location Now!");
              //   mMap.addMarker(currOptions);
         mMarker.setPosition(getCurrentLatLng(mCurrentLocation));
-        if(startMarker!=null && endMarker == null){
-            PolylineOptions lineOptions = new PolylineOptions()
-                    .add(getCurrentLatLng(mCurrentLocation), getCurrentLatLng(mPreviousLocation))
-                    .width(20).color(Color.CYAN);
+
+            if(startMarker!=null && endMarker == null){
+                PolylineOptions lineOptions = new PolylineOptions()
+                        .add(getCurrentLatLng(mCurrentLocation), getCurrentLatLng(mPreviousLocation))
+                        .width(20).color(Color.CYAN);
             //make a polyline from mpreviouslocation
             //to mcurrentlocation
-            mMap.addPolyline(lineOptions);
-        }
+                mMap.addPolyline(lineOptions);
+                prevLat = curLat;
+                prevLon = curLong;
+                curLat = location.getLatitude();
+                curLong = location.getLongitude();
+                totalDist = dist + getDistance(prevLon, prevLat, curLat, curLong);
+            }
+
         mPreviousLocation=location;//test of getCurrentLatLng
         //this method works but gives issue for buttonclick, since marker isnt down yet
     }
@@ -348,6 +365,23 @@ public class MapsActivity extends FragmentActivity implements
     public void openSettings(View view) {
        Intent intent = new Intent(this,SettingsActivity.class);
         MapsActivity.this.startActivity(intent);
+    }
+
+    public static double getDistance(double lat1, double lng1, double lat2, double lng2)
+    {
+        // mHager 08-12-2012
+        // http://en.wikipedia.org/wiki/Haversine_formula
+        double earthRadius = 3958.75; // miles (or 6371.0 kilometers)
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+        double sindLat = Math.sin(dLat / 2);
+        double sindLng = Math.sin(dLng / 2);
+        double a = Math.pow(sindLat, 2) + Math.pow(sindLng, 2)
+                * Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2));
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        double getdist = earthRadius * c;
+
+        return getdist;
     }
 
 }

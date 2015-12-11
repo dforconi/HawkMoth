@@ -31,7 +31,7 @@ public class MapsActivity extends FragmentActivity implements
         LocationListener {
 
     public static final String TAG = MapsActivity.class.getSimpleName();
-    public final static String EXTRA_MESSAGE = "com.teamVictory.map.MESSAGE";
+    //public final static String EXTRA_MESSAGE = "com.teamVictory.map.MESSAGE";
     /*
      * Define a request code to send to Google Play services
      * This code is returned in Activity.onActivityResult
@@ -46,11 +46,9 @@ public class MapsActivity extends FragmentActivity implements
     private Marker mMarker;
     private Marker startMarker;
     private Marker endMarker;
-    private boolean mRequestingLocation;
     Button button1;
     Button button2;
     Bundle extras;
-   public boolean startState =true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -291,15 +289,22 @@ public class MapsActivity extends FragmentActivity implements
 
     public void openSettings(View view) {
        Intent intent = new Intent(this,SettingsActivity.class);
-        MapsActivity.this.startActivity(intent);
-        Bundle extras = intent.getExtras();
-        if(endMarker!=null){
-            extras.putString("endPosition", endMarker.getPosition().toString());
-        }
+        Bundle extras=new Bundle();
+       // intent.putExtra("test","test2");
         if(startMarker!=null){
-            extras.putString("startPosition",startMarker.getPosition().toString());
+            intent.putExtra("startPosition",startMarker.getPosition().toString());
         }
-        extras.putString("currentPosition", getCurrentLatLng(mCurrentLocation).toString());
+        if(endMarker!=null){
+            intent.putExtra("endPosition", endMarker.getPosition().toString());
+        }
+        intent.putExtra("currentPosition", getCurrentLatLng(mCurrentLocation).toString());
+        MapsActivity.this.startActivity(intent);
+
+        //intent.putExtra("test","TEST");
+        //= intent.getExtras();
+
+
+
     }
 
 }

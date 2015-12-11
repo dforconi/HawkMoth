@@ -6,13 +6,14 @@ import android.widget.TextView;
 
 public class SettingsActivity extends MapsActivity {
 
-
-
+//getIntent().getStringExtra()
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Intent intent = getIntent();
         super.onCreate(savedInstanceState);
+        Bundle extras = getIntent().getExtras();
         setContentView(R.layout.activity_settings);
+  //              getIntent().getStringExtra("test"));
         //
         TextView currentLatLng = (TextView)findViewById(R.id.currentLatLng);
         currentLatLng.setText(extras.getString("currentPosition"));

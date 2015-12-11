@@ -28,6 +28,10 @@ public class SettingsActivity extends MapsActivity {
         TextView endPosition = (TextView)findViewById(R.id.endPositionPlaceholder);
             endPosition.setText(extras.getString("endPosition"));
         }
+        if(intent.hasExtra("totalDistance")){
+            TextView totalDistance=(TextView)findViewById(R.id.distanceTraveledPlaceholder);
+            totalDistance.setText(extras.getString("totalDistance"));
+        }
 
 
 //get starting pos

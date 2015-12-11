@@ -49,7 +49,8 @@ public class MapsActivity extends FragmentActivity implements
     Button button1;
     Button button2;
     Bundle extras;
-
+    double distanceChanged;
+    double totalDistance=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +86,7 @@ public class MapsActivity extends FragmentActivity implements
                         .title("end").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
                 if(startMarker==null && endMarker==null) {
+                    totalDistance=0;
                         startMarker = mMap.addMarker(startOptions);
                     }
                 else if (startMarker!=null && endMarker==null){
@@ -248,6 +250,8 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
+    //    double prevLat=location.getLatitude();
+    //    double prevLng=location.getLongitude();
         updateMap(mCurrentLocation);
 
         //String mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
@@ -270,6 +274,8 @@ public class MapsActivity extends FragmentActivity implements
              //   mMap.addMarker(currOptions);
 
             mMarker.setPosition(getCurrentLatLng(mCurrentLocation));
+       double mCurrentLat= mCurrentLocation.getLatitude();
+        double mCurrentLng=mCurrentLocation.getLongitude();
 
         if(startMarker!=null && endMarker == null){
             PolylineOptions lineOptions = new PolylineOptions()
@@ -281,10 +287,27 @@ public class MapsActivity extends FragmentActivity implements
         }
         mPreviousLocation=location;//test of getCurrentLatLng
         //this method works but gives issue for buttonclick, since marker isnt down yet
+        double mPrevLat=mPreviousLocation.getLatitude();
+        double mPrevLng=mPreviousLocation.getLongitude();
+       distanceChanged= distFrom(mPrevLat,mPrevLng,mCurrentLat,mCurrentLng);
+        if(startMarker!=null){
+            totalDistance=totalDistance+distanceChanged;
+        }
     }
 
     protected void startLocationUpdates(){
                 LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+    }
+    public static double distFrom(double lat1, double lng1, double lat2, double lng2){
+        double earthRadius=3958.75;
+        double dlat=Math.toRadians(lat2-lat1);
+        double dlng=Math.toRadians(lng2-lng1);
+        double sindLat=Math.sin(dlat/2);
+        double sindLng=Math.sin(dlng/2);
+        double a= Math.pow(sindLat, 2)+ Math.pow(sindLng,2)*Math.cos(Math.toRadians(lat2));
+        double c =2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+        double dist =earthRadius * c;
+        return dist;
     }
 
     public void openSettings(View view) {
@@ -298,6 +321,8 @@ public class MapsActivity extends FragmentActivity implements
             intent.putExtra("endPosition", endMarker.getPosition().toString());
         }
         intent.putExtra("currentPosition", getCurrentLatLng(mCurrentLocation).toString());
+        String totalDistanceString=String.valueOf(totalDistance);
+        intent.putExtra("totalDistance",totalDistanceString);
         MapsActivity.this.startActivity(intent);
 
         //intent.putExtra("test","TEST");

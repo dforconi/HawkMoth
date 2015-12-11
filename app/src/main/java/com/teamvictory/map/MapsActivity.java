@@ -56,7 +56,8 @@ public class MapsActivity extends FragmentActivity implements
     Button button1;
     Button button2;
     public boolean startState =true;
-    public double dist;   // will depend on units dist is measured in (meters, miles, feet, etc.)
+    private double dist; // dist to be displayed by toast popup
+    private double totalDist; // running total of overall distance
     private long startTime;  // will depend on how time is measured (sec, mins, etc.)
     private long elapsedTime;
     private boolean running;  // used for timer
@@ -86,44 +87,6 @@ public class MapsActivity extends FragmentActivity implements
     }
 
 
-    /* Don't need updateTimer */
-    private void updateTimer (float time) {
-        secs = (long) (time / 1000);
-        mins = (long) ((time / 1000) / 60);
-        hrs = (long) (((time / 1000) / 60) / 60);
-
-        /* Convert the seconds to String * and format to ensure it has * a leading zero when required */
-        secs = secs % 60;
-        seconds = String.valueOf(secs);
-            if (secs == 0) {
-                seconds = "00";
-            }
-            if (secs < 10 && secs > 0) {
-                seconds = "0" + seconds;
-            }
-
-        /* Convert the minutes to String and format the String */
-        mins = mins % 60;
-        minutes = String.valueOf(mins);
-            if (mins == 0) {
-                minutes = "00";
-            }
-            if (mins < 10 && mins > 0) {
-                minutes = "0" + minutes;
-            }
-
-        /* Convert the hours to String and format the String */
-        hours = String.valueOf(hrs);
-            if (hrs == 0) {
-                hours = "00";
-            }
-            if (hrs < 10 && hrs > 0) {
-                hours = "0" + hours;
-            }
-
-    }
-
-
     private void addListenerOnButton() {
         button1 = (Button) findViewById(R.id.button);
         button2 = (Button) findViewById(R.id.button2);
@@ -144,6 +107,7 @@ public class MapsActivity extends FragmentActivity implements
 
                 if(startMarker==null && endMarker==null) {
                         startMarker = mMap.addMarker(startOptions);
+                        totalDist = 0.0;
                     }
                 else if (startMarker!=null && endMarker==null){
                     endMarker =mMap.addMarker(endOptions);
@@ -152,10 +116,12 @@ public class MapsActivity extends FragmentActivity implements
                     endMarker.remove();
                     startMarker.remove();
                     startMarker=mMap.addMarker(startOptions);
+                    totalDist = 0.0;
                 }
                 else if( startMarker==null && endMarker!=null){
                     endMarker.remove();
                     startMarker=mMap.addMarker(startOptions);
+                    totalDist = 0.0;
                 }
             }
 
@@ -164,9 +130,11 @@ public class MapsActivity extends FragmentActivity implements
         button2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-               // Toast popup to display stats. Should show elapsed time (System.currentTimeMillis()-startTime)
-                double dist = 15.0; // dummy value for display purposes
 
+               // double dist = 15.0; // dummy value for display purposes
+
+        /* assigns dist to equal running total of distance*/
+                double dist = totalDist;
         /* gives elapsed time since start was pressed in milliseconds*/
                 long elapsedTime = System.currentTimeMillis()-startTime;
 

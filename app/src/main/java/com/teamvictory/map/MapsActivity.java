@@ -51,6 +51,13 @@ public class MapsActivity extends FragmentActivity implements
     Bundle extras;
     double distanceChanged;
     double totalDistance=0;
+    Long startTime;
+    Long secs;
+    Long mins;
+    Long hrs;
+    private String hours,minutes,seconds;
+    String timeString;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +86,7 @@ public class MapsActivity extends FragmentActivity implements
         button1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                startTime=System.currentTimeMillis();
                 MarkerOptions startOptions = new MarkerOptions().position(getCurrentLatLng(mCurrentLocation))
                         .title("start").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
@@ -109,6 +117,43 @@ public class MapsActivity extends FragmentActivity implements
             @Override
             public void onClick(View v) {
 
+                long elapsedTime=System.currentTimeMillis()-startTime;
+                   /* convert milliseconds to hours, minutes and seconds */
+                secs = (long) (elapsedTime / 1000);
+                mins = (long) ((elapsedTime / 1000) / 60);
+                hrs = (long) (((elapsedTime / 1000) / 60) / 60);
+
+/* Convert the seconds to String * and format to ensure it has * a leading zero when required */
+                secs = secs % 60;
+                seconds = String.valueOf(secs);
+                if (secs == 0) {
+                    seconds = "00";
+                }
+                if (secs < 10 && secs > 0) {
+                    seconds = "0" + seconds;
+                }
+
+/* Convert the minutes to String and format the String */
+                mins = mins % 60;
+                minutes = String.valueOf(mins);
+                if (mins == 0) {
+                    minutes = "00";
+                }
+                if (mins < 10 && mins > 0) {
+                    minutes = "0" + minutes;
+                }
+
+/* Convert the hours to String and format the String */
+                hrs = hrs % 60;
+                hours = String.valueOf(hrs);
+                if (hrs == 0) {
+                    hours = "00";
+                }
+                if (hrs < 10 && hrs > 0) {
+                    hours = "0" + hours;
+                }
+
+                timeString= "Time: " +hours + ":" + minutes + ":" + seconds;
                //should create bundles based on what is on the map.
                 //get starting location
                 //get final location
@@ -323,6 +368,7 @@ public class MapsActivity extends FragmentActivity implements
         intent.putExtra("currentPosition", getCurrentLatLng(mCurrentLocation).toString());
         String totalDistanceString=String.valueOf(totalDistance);
         intent.putExtra("totalDistance",totalDistanceString);
+        intent.putExtra("stringTime",timeString);
         MapsActivity.this.startActivity(intent);
 
         //intent.putExtra("test","TEST");

@@ -32,6 +32,10 @@ public class SettingsActivity extends MapsActivity {
             TextView totalDistance=(TextView)findViewById(R.id.distanceTraveledPlaceholder);
             totalDistance.setText(extras.getString("totalDistance"));
         }
+        if(intent.hasExtra("stringTime")){
+            TextView time= (TextView)findViewById(R.id.timePlaceHolder);
+            time.setText((extras.getString("stringTime")));
+        }
 
 
 //get starting pos

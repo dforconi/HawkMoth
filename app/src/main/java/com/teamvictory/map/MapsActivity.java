@@ -11,6 +11,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
+import android.widget.LinearLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -53,8 +57,11 @@ public class MapsActivity extends FragmentActivity implements
     Button button2;
     public boolean startState =true;
     public double dist;   // will depend on units dist is measured in (meters, miles, feet, etc.)
-    public double time;  // will depend on how time is measured (sec, mins, etc.)
-
+    private long startTime;  // will depend on how time is measured (sec, mins, etc.)
+    private long elapsedTime;
+    private boolean running;  // used for timer
+    private long secs,mins,hrs;
+    private String hours,minutes,seconds;
 
 
     @Override
@@ -79,6 +86,44 @@ public class MapsActivity extends FragmentActivity implements
     }
 
 
+    /* Don't need updateTimer */
+    private void updateTimer (float time) {
+        secs = (long) (time / 1000);
+        mins = (long) ((time / 1000) / 60);
+        hrs = (long) (((time / 1000) / 60) / 60);
+
+        /* Convert the seconds to String * and format to ensure it has * a leading zero when required */
+        secs = secs % 60;
+        seconds = String.valueOf(secs);
+            if (secs == 0) {
+                seconds = "00";
+            }
+            if (secs < 10 && secs > 0) {
+                seconds = "0" + seconds;
+            }
+
+        /* Convert the minutes to String and format the String */
+        mins = mins % 60;
+        minutes = String.valueOf(mins);
+            if (mins == 0) {
+                minutes = "00";
+            }
+            if (mins < 10 && mins > 0) {
+                minutes = "0" + minutes;
+            }
+
+        /* Convert the hours to String and format the String */
+        hours = String.valueOf(hrs);
+            if (hrs == 0) {
+                hours = "00";
+            }
+            if (hrs < 10 && hrs > 0) {
+                hours = "0" + hours;
+            }
+
+    }
+
+
     private void addListenerOnButton() {
         button1 = (Button) findViewById(R.id.button);
         button2 = (Button) findViewById(R.id.button2);
@@ -86,6 +131,11 @@ public class MapsActivity extends FragmentActivity implements
         button1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // keep track of time when start is pressed
+                startTime = System.currentTimeMillis();
+
+
                 MarkerOptions startOptions = new MarkerOptions().position(getCurrentLatLng(mCurrentLocation))
                         .title("start").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
@@ -114,11 +164,53 @@ public class MapsActivity extends FragmentActivity implements
         button2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-               // Toast popup to display stats
+               // Toast popup to display stats. Should show elapsed time (System.currentTimeMillis()-startTime)
                 double dist = 15.0; // dummy value for display purposes
-                double time = 63.0; // dummy value
-                Toast.makeText(getApplicationContext(), "Distance (mi.): " +dist +"\nTime (min.): " +time, Toast.LENGTH_LONG).show();
+
+        /* gives elapsed time since start was pressed in milliseconds*/
+                long elapsedTime = System.currentTimeMillis()-startTime;
+
+        /* convert milliseconds to hours, minutes and seconds */
+                secs = (long) (elapsedTime / 1000);
+                mins = (long) ((elapsedTime / 1000) / 60);
+                hrs = (long) (((elapsedTime / 1000) / 60) / 60);
+
+        /* Convert the seconds to String * and format to ensure it has * a leading zero when required */
+                secs = secs % 60;
+                seconds = String.valueOf(secs);
+                if (secs == 0) {
+                    seconds = "00";
+                }
+                if (secs < 10 && secs > 0) {
+                    seconds = "0" + seconds;
+                }
+
+        /* Convert the minutes to String and format the String */
+                mins = mins % 60;
+                minutes = String.valueOf(mins);
+                if (mins == 0) {
+                    minutes = "00";
+                }
+                if (mins < 10 && mins > 0) {
+                    minutes = "0" + minutes;
+                }
+
+        /* Convert the hours to String and format the String */
+                hrs = hrs % 60;
+                hours = String.valueOf(hrs);
+                if (hrs == 0) {
+                    hours = "00";
+                }
+                if (hrs < 10 && hrs > 0) {
+                    hours = "0" + hours;
+                }
+
+         /* Toast popup that displays time and distance*/
+                Toast.makeText(getApplicationContext(), "Distance (mi.): " +dist +"\nTime: " +hours + ":" + minutes + ":" + seconds, Toast.LENGTH_LONG).show();
                 // do something when Stats clicked
+
+
+
             }
 
         });

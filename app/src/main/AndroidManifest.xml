@@ -45,10 +45,6 @@
                 android:value="com.teamvictory.map.MapsActivity" />
         </activity>
 
-        <service
-            android:name=".LocationServices"
-            android:enabled="true"
-            android:exported="true"></service>
     </application>
 
 </manifest>

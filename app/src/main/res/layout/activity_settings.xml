@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Current Latitude and Longitude:"
+        android:text="@string/currentLatLngText"
         android:id="@+id/textView"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -23,9 +23,64 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/textView2"
+        android:text="@string/currentLatLng"
+        android:id="@+id/currentLatLng"
+
         android:layout_below="@+id/textView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/startingPosition"
+        android:id="@+id/startPositionText"
+        android:layout_below="@+id/currentLatLng"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/startingPosPlaceholder"
+        android:id="@+id/startPosPlaceholder"
+        android:layout_below="@+id/startPositionText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ending Position:"
+        android:id="@+id/endPositionText"
+        android:layout_below="@+id/startPosPlaceholder"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="endPosPlaceHolder"
+        android:id="@+id/endPositionPlaceholder"
+        android:layout_below="@+id/endPositionText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Distance Traveled"
+        android:id="@+id/distanceTraveledText"
+        android:layout_below="@+id/endPositionPlaceholder"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="distanceTraveledPlaceholder"
+        android:id="@+id/distanceTraveledPlaceholder"
+        android:layout_below="@+id/distanceTraveledText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 </RelativeLayout>

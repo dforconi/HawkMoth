@@ -31,8 +31,7 @@ public class MapsActivity extends FragmentActivity implements
         LocationListener {
 
     public static final String TAG = MapsActivity.class.getSimpleName();
-    public final static String EXTRA_MESSAGE = "com.teamvictory.map.MESSAGE";
-    public boolean start_stop =true;
+    public final static String EXTRA_MESSAGE = "com.teamVictory.map.MESSAGE";
     /*
      * Define a request code to send to Google Play services
      * This code is returned in Activity.onActivityResult
@@ -50,6 +49,7 @@ public class MapsActivity extends FragmentActivity implements
     private boolean mRequestingLocation;
     Button button1;
     Button button2;
+    Bundle extras;
    public boolean startState =true;
 
     @Override
@@ -108,6 +108,12 @@ public class MapsActivity extends FragmentActivity implements
         button2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+
+               //should create bundles based on what is on the map.
+                //get starting location
+                //get final location
+                //get current location
+
                // mMap.clear();
                 openSettings(v);
                 // do something when settings clicked
@@ -244,18 +250,18 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
-        updatemap(mCurrentLocation);
+        updateMap(mCurrentLocation);
 
         //String mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
     }
-    private LatLng getCurrentLatLng(Location location){
+    public LatLng getCurrentLatLng(Location location){
         double lat = location.getLatitude();
 
         double lon = location.getLongitude();
 
         return new LatLng(lat,lon);
     }
-    private void updatemap(Location location) {
+    private void updateMap(Location location) {//refactored
         double currentLat = location.getLatitude();
         double currentLong = location.getLongitude();
 
@@ -286,6 +292,14 @@ public class MapsActivity extends FragmentActivity implements
     public void openSettings(View view) {
        Intent intent = new Intent(this,SettingsActivity.class);
         MapsActivity.this.startActivity(intent);
+        Bundle extras = intent.getExtras();
+        if(endMarker!=null){
+            extras.putString("endPosition", endMarker.getPosition().toString());
+        }
+        if(startMarker!=null){
+            extras.putString("startPosition",startMarker.getPosition().toString());
+        }
+        extras.putString("currentPosition", getCurrentLatLng(mCurrentLocation).toString());
     }
 
 }

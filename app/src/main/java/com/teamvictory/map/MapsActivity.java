@@ -51,10 +51,8 @@ public class MapsActivity extends FragmentActivity implements
     Bundle extras;
     double distanceChanged;
     double totalDistance=0;
-    Long startTime;
-    Long secs;
-    Long mins;
-    Long hrs;
+    long startTime;
+    long secs, mins, hrs;
     private String hours,minutes,seconds;
     String timeString;
 

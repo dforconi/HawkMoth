@@ -321,7 +321,7 @@ public class MapsActivity extends FragmentActivity implements
             mMarker.setPosition(getCurrentLatLng(mCurrentLocation));
        double mCurrentLat= mCurrentLocation.getLatitude();
         double mCurrentLng=mCurrentLocation.getLongitude();
-
+        float [] answer=new float[1];
         if(startMarker!=null && endMarker == null){
             PolylineOptions lineOptions = new PolylineOptions()
                     .add(getCurrentLatLng(mCurrentLocation), getCurrentLatLng(mPreviousLocation))
@@ -334,26 +334,16 @@ public class MapsActivity extends FragmentActivity implements
         //this method works but gives issue for buttonclick, since marker isnt down yet
         double mPrevLat=mPreviousLocation.getLatitude();
         double mPrevLng=mPreviousLocation.getLongitude();
-       distanceChanged= distFrom(mPrevLat,mPrevLng,mCurrentLat,mCurrentLng);
+        Location.distanceBetween(mPrevLat,mCurrentLat,mPrevLng,mCurrentLng,answer);
         if(startMarker!=null){
-            totalDistance=totalDistance+distanceChanged;
+            totalDistance=totalDistance+answer[0];
         }
     }
 
     protected void startLocationUpdates(){
                 LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
     }
-    public static double distFrom(double lat1, double lng1, double lat2, double lng2){
-        double earthRadius=3958.75;
-        double dlat=Math.toRadians(lat2-lat1);
-        double dlng=Math.toRadians(lng2-lng1);
-        double sindLat=Math.sin(dlat/2);
-        double sindLng=Math.sin(dlng/2);
-        double a= Math.pow(sindLat, 2)+ Math.pow(sindLng,2)*Math.cos(Math.toRadians(lat2));
-        double c =2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
-        double dist =earthRadius * c;
-        return dist;
-    }
+
 
     public void openSettings(View view) {
        Intent intent = new Intent(this,SettingsActivity.class);
